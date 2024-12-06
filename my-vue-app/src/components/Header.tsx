@@ -1,22 +1,27 @@
 import React from 'react';
-import './header.css';
+import './Header.css';
+
 type HeaderProps = {
   placeholder: string;
 };
 
-const Header: React.FC<HeaderProps> = ({ placeholder }) => (
-  <header className="header">
-    <div className="instrumental_pannel">
-      <i>instrumental_pannel</i>
-      <input
-        type="text"
-        className="presentation_name"
-        id="presentation_name"
-        name="presentation_name"
-        placeholder={placeholder}
-      />
-    </div>
-  </header>
-);
+const Header: React.FC<HeaderProps> = ({ placeholder }) => {
+  return (
+    <header className="header">
+      <div className="instrumental_panel">
+        <i>Instrumental Panel</i>
+        <input
+          type="text"
+          className="presentation_name"
+          placeholder={placeholder}
+        />
+        <button>Button 1</button>
+        <button>Button 2</button>
+        <button>Button 3</button>
+        <button>Button 4</button>
+      </div>
+    </header>
+  );
+};
 
 export default Header;

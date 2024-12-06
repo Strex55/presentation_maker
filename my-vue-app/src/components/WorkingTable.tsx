@@ -1,22 +1,18 @@
 import React from 'react';
 import './WorkingTable.css';
-type WorkingTableProps = {
-  placeholder: string;
-};
 
-const WorkingTable: React.FC<WorkingTableProps> = ({ placeholder }) => (
-  <div className="working_table">
-    <i>working_table</i>
-    <div>
-      <input
-        type="text"
-        className="presentation_text"
-        id="presentation_text"
-        name="presentation_text"
-        placeholder={placeholder}
-      />
+const WorkingTable: React.FC = () => {
+  return (
+    <div className="working_table">
+      <div>
+        <input
+          type="text"
+          className="presentation_text"
+          placeholder="Type some text"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default WorkingTable;
