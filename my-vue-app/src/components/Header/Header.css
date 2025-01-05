@@ -1,0 +1,23 @@
+.instrumental_pannel {
+    display: block;
+    border: 1px solid grey;
+    padding: 1%;
+}
+
+.presentation_name {
+    padding: 1px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 1px;
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 2%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
