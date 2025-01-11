@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import SlideList from './components/SlideList/SlideList';
 import WorkingTable from './components/WorkingTable/WorkingTable';
-import './App.css';
+import styles from './App.module.css';
 
 type Slide = {
   id: string;
@@ -82,7 +82,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app">
+    <div className={styles.app}>
       <Header
         placeholder="Enter Presentation Name"
         presentationName={presentationName}
@@ -92,7 +92,7 @@ const App: React.FC = () => {
         changeSlideBackground={changeSlideBackground}
         addImageToSlide={addImageToSlide}
       />
-      <div className="main_container">
+      <div className={styles.main_container}>
         <SlideList
           slides={slides}
           currentSlideId={currentSlideId}

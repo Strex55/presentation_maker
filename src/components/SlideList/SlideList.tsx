@@ -1,5 +1,5 @@
 import React from 'react';
-import './SlideList.css';
+import styles from './SlideList.module.css';
 
 type Slide = {
   id: string;
@@ -14,12 +14,14 @@ type SlideListProps = {
 
 const SlideList: React.FC<SlideListProps> = ({ slides, currentSlideId, setCurrentSlideId }) => {
   return (
-    <div className="slide_list">
+    <div className={styles.slide_list}>
       <ul>
         {slides.map((slide) => (
           <li
             key={slide.id}
-            className={`slide_item ${slide.id === currentSlideId ? 'active' : ''}`}
+            className={`${styles.slide_item} ${
+              slide.id === currentSlideId ? styles.active : ''
+            }`}
             onClick={() => setCurrentSlideId(slide.id)}
           >
             {slide.title}

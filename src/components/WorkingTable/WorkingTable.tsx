@@ -1,5 +1,5 @@
 import React from 'react';
-import './WorkingTable.css';
+import styles from './WorkingTable.module.css';
 
 type Slide = {
   id: string;
@@ -22,28 +22,28 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
   const currentSlide = slides.find((slide) => slide.id === currentSlideId);
 
   if (!currentSlide) {
-    return <div className="working_table">No slide selected. Add or select a slide to start editing.</div>;
+    return <div className={styles.working_table}>No slide selected. Add or select a slide to start editing.</div>;
   }
 
   return (
     <div
-      className="working_table"
+      className={styles.working_table}
       style={{ backgroundColor: currentSlide.background }}
     >
-      <div className="content_wrapper">
+      <div className={styles.content_wrapper}>
         <textarea
           value={currentSlide.text}
           onChange={(e) => updateSlideText(e.target.value)}
-          className="presentation_text"
+          className={styles.presentation_text}
           placeholder="Type some text"
         />
-        <div className="slide_images">
+        <div className={styles.slide_images}>
           {currentSlide.images.map((image, index) => (
             <img
               key={index}
               src={image}
               alt={`Slide Image ${index + 1}`}
-              className="slide_image"
+              className={styles.slide_image}
             />
           ))}
         </div>

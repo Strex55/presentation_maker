@@ -1,5 +1,7 @@
 import React from 'react';
-import './Header.css';
+import styles from './Header.module.css';
+
+
 
 type HeaderProps = {
   placeholder: string;
@@ -42,19 +44,19 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="header">
-      <div className="instrumental_panel">
+    <header className={styles.header}>
+      <div className={styles.instrumental_panel}>
         <i>Instrumental Panel</i>
         <input
           type="text"
-          className="presentation_name"
+          className={styles.presentation_name}
           placeholder={placeholder}
           value={presentationName}
           onChange={handleNameChange}
         />
         <button onClick={addSlide}>Add Slide</button>
         <button onClick={removeSlide}>Remove Slide</button>
-        <label htmlFor="background-color" className="color-button">
+        <label htmlFor="background-color" className={styles.color_button}>
           Change Background
           <input
             id="background-color"
@@ -63,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({
             style={{ display: 'none' }}
           />
         </label>
-        <label htmlFor="upload-image" className="image-upload-button">
+        <label htmlFor="upload-image" className={styles.image_upload_button}>
           Add Image
           <input
             id="upload-image"

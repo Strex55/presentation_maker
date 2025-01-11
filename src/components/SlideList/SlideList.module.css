@@ -22,7 +22,7 @@
   background-color: #e0e0e0;
 }
 
-.slide_item.active {
+.active { 
   background: #ccc;
   color: white;
   border-color: black;

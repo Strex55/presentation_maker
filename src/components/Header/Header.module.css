@@ -1,3 +1,7 @@
+.header {
+    padding: 10px;
+}
+
 .instrumental_pannel {
     display: block;
     border: 1px solid grey;
@@ -5,6 +9,7 @@
 }
 
 .presentation_name {
+    margin: 10px;
     padding: 1px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -20,4 +25,15 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+.color_button {
+    padding: 5px;
+    color: black;
+    cursor: pointer;
+}
+
+.image_upload_button {
+    padding: 5px;
+    cursor: pointer;
 }
