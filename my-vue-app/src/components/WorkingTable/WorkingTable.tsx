@@ -4,25 +4,29 @@ import styles from './WorkingTable.module.css';
 type Slide = {
   id: string;
   background: string;
-  text: string;
+  textFields: { id: string; value: string; x: number; y: number }[]; // Массив текстовых полей
   images: string[];
 };
 
 type WorkingTableProps = {
   currentSlideId: string | null;
   slides: Slide[];
-  updateSlideText: (text: string) => void;
+  updateTextField: (fieldId: string, value: string) => void; // Новый метод
 };
 
 const WorkingTable: React.FC<WorkingTableProps> = ({
   currentSlideId,
   slides,
-  updateSlideText,
+  updateTextField,
 }) => {
   const currentSlide = slides.find((slide) => slide.id === currentSlideId);
 
   if (!currentSlide) {
-    return <div className={styles.working_table}>No slide selected. Add or select a slide to start editing.</div>;
+    return (
+      <div className={styles.working_table}>
+        No slide selected. Add or select a slide to start editing.
+      </div>
+    );
   }
 
   return (
@@ -31,12 +35,16 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
       style={{ backgroundColor: currentSlide.background }}
     >
       <div className={styles.content_wrapper}>
-        <textarea
-          value={currentSlide.text}
-          onChange={(e) => updateSlideText(e.target.value)}
-          className={styles.presentation_text}
-          placeholder="Type some text"
-        />
+        {currentSlide.textFields.map((field) => (
+          <textarea
+            key={field.id}
+            value={field.value}
+            className={styles.text_field}
+            style={{ position: 'absolute', left: `${field.x}px`, top: `${field.y}px` }}
+            onChange={(e) => updateTextField(field.id, e.target.value)} // Обновление текста
+            placeholder="Type here..."
+          />
+        ))}
         <div className={styles.slide_images}>
           {currentSlide.images.map((image, index) => (
             <img

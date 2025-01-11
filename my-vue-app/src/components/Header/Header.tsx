@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
 
-
-
 type HeaderProps = {
   placeholder: string;
   presentationName: string;
@@ -11,6 +9,7 @@ type HeaderProps = {
   removeSlide: () => void;
   changeSlideBackground: (color: string) => void;
   addImageToSlide: (imageUrl: string) => void;
+  addTextField: () => void;
 };
 
 const Header: React.FC<HeaderProps> = ({
@@ -21,6 +20,7 @@ const Header: React.FC<HeaderProps> = ({
   removeSlide,
   changeSlideBackground,
   addImageToSlide,
+  addTextField,
 }) => {
   const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     changeSlideBackground(event.target.value);
@@ -56,6 +56,7 @@ const Header: React.FC<HeaderProps> = ({
         />
         <button onClick={addSlide}>Add Slide</button>
         <button onClick={removeSlide}>Remove Slide</button>
+        <button onClick={addTextField}>Add Text Field</button>
         <label htmlFor="background-color" className={styles.color_button}>
           Change Background
           <input

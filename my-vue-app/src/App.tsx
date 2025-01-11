@@ -8,21 +8,25 @@ type Slide = {
   id: string;
   title: string;
   background: string;
-  text: string;
+  textFields: { id: string; value: string; x: number; y: number }[];
   images: string[];
 };
 
 const App: React.FC = () => {
   const [presentationName, setPresentationName] = useState<string>('My Presentation');
   const [slides, setSlides] = useState<Slide[]>([
-    { id: '1', title: 'Slide 1', background: '#ffffff', text: '', images: [] },
-    { id: '2', title: 'Slide 2', background: '#ffffff', text: '', images: [] },
-    { id: '3', title: 'Slide 3', background: '#ffffff', text: '', images: [] },
+    {
+      id: '1',
+      title: 'Slide 1',
+      background: '#ffffff',
+      textFields: [],
+      images: [],
+    },
   ]);
   const [currentSlideId, setCurrentSlideId] = useState<string | null>(slides[0]?.id || null);
 
   useEffect(() => {
-    document.title = presentationName; // Обновление заголовка вкладки
+    document.title = presentationName;
   }, [presentationName]);
 
   const addSlide = () => {
@@ -30,7 +34,7 @@ const App: React.FC = () => {
       id: `${Date.now()}`,
       title: `Slide ${slides.length + 1}`,
       background: '#ffffff',
-      text: '',
+      textFields: [],
       images: [],
     };
     setSlides((prevSlides) => [...prevSlides, newSlide]);
@@ -59,11 +63,36 @@ const App: React.FC = () => {
     }
   };
 
-  const updateSlideText = (text: string) => {
+  const updateTextField = (fieldId: string, value: string) => {
     if (currentSlideId) {
       setSlides((prevSlides) =>
         prevSlides.map((slide) =>
-          slide.id === currentSlideId ? { ...slide, text } : slide
+          slide.id === currentSlideId
+            ? {
+                ...slide,
+                textFields: slide.textFields.map((field) =>
+                  field.id === fieldId ? { ...field, value } : field
+                ),
+              }
+            : slide
+        )
+      );
+    }
+  };
+
+  const addTextField = () => {
+    if (currentSlideId) {
+      setSlides((prevSlides) =>
+        prevSlides.map((slide) =>
+          slide.id === currentSlideId
+            ? {
+                ...slide,
+                textFields: [
+                  ...slide.textFields,
+                  { id: `${Date.now()}`, value: '', x: 50, y: 50 },
+                ],
+              }
+            : slide
         )
       );
     }
@@ -91,6 +120,7 @@ const App: React.FC = () => {
         removeSlide={removeSlide}
         changeSlideBackground={changeSlideBackground}
         addImageToSlide={addImageToSlide}
+        addTextField={addTextField}
       />
       <div className={styles.main_container}>
         <SlideList
@@ -101,7 +131,7 @@ const App: React.FC = () => {
         <WorkingTable
           currentSlideId={currentSlideId}
           slides={slides}
-          updateSlideText={updateSlideText}
+          updateTextField={updateTextField}
         />
       </div>
     </div>
