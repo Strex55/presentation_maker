@@ -17,7 +17,6 @@ type WorkingTableProps = {
   updateImagePosition: (imageIndex: number, x: number, y: number) => void;
 };
 
-
 const WorkingTable: React.FC<WorkingTableProps> = ({
   currentSlideId,
   slides,
@@ -35,7 +34,10 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
     );
   }
 
-  const handleDragStartText = (e: React.DragEvent<HTMLDivElement>, field: TextField) => {
+  const handleDragStartText = (
+    e: React.DragEvent<HTMLDivElement>,
+    field: TextField
+  ) => {
     e.dataTransfer.setData(
       'text/plain',
       JSON.stringify({
@@ -47,14 +49,19 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
     );
   };
 
-
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, field: TextField) => {
+  const handleDragStartImage = (
+    e: React.DragEvent<HTMLImageElement>,
+    index: number,
+    x: number,
+    y: number
+  ) => {
     e.dataTransfer.setData(
-      'application/json',
+      'text/plain',
       JSON.stringify({
-        id: field.id,
-        offsetX: e.clientX - field.x,
-        offsetY: e.clientY - field.y,
+        id: index,
+        type: 'image',
+        offsetX: e.clientX - x,
+        offsetY: e.clientY - y,
       })
     );
   };
@@ -64,88 +71,77 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    const data = e.dataTransfer.getData('application/json');
+    const data = e.dataTransfer.getData('text/plain');
     if (!data) return;
 
-    const { id, offsetX, offsetY } = JSON.parse(data);
-    const x = e.clientX - offsetX;
-    const y = e.clientY - offsetY;
-    updateImagePosition(parseInt(id), x, y);
+    const parsedData = JSON.parse(data);
+
+    if (parsedData.type === 'text') {
+      updateTextFieldPosition(
+        parsedData.id,
+        e.clientX - parsedData.offsetX,
+        e.clientY - parsedData.offsetY
+      );
+    } else if (parsedData.type === 'image') {
+      updateImagePosition(
+        parsedData.id,
+        e.clientX - parsedData.offsetX,
+        e.clientY - parsedData.offsetY
+      );
+    }
   };
+
   return (
     <div
       className={styles.working_table}
       style={{
         backgroundColor:
           typeof currentSlide.background === 'string'
-            ? currentSlide.background // Если строка, используем как есть
+            ? currentSlide.background
             : currentSlide.background.type === 'color'
-              ? currentSlide.background.color // Извлекаем цвет из объекта
-              : 'transparent', // Для других типов устанавливаем прозрачный фон
+            ? currentSlide.background.color
+            : 'transparent',
       }}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className={styles.content_wrapper}>
-        {currentSlide.textFields.map((field) => (
-          <div
-            key={field.id}
-            className={styles.text_field}
-            style={{
-              position: 'absolute',
-              left: `${field.x}px`,
-              top: `${field.y}px`,
-            }}
-            draggable
-            onDragStart={(e) => handleDragStart(e, field)}
-          >
-            <textarea
-              value={field.value}
-              onChange={(e) => updateTextField(field.id, e.target.value)}
-              placeholder="Type here..."
-              className={styles.textarea}
-            />
-          </div>
-        ))}
-        <div className={styles.slide_images}>
-          {currentSlide.images.map((image, index) => (
-            <img
-              key={index}
-              src={image.src} // Теперь это объект с `src`
-              alt={`Slide Image ${index + 1}`}
-              className={styles.slide_image}
-              style={{
-                position: 'absolute',
-                left: `${image.x}px`,
-                top: `${image.y}px`,
-              }}
-              draggable
-              onDragStart={(e) =>
-                e.dataTransfer.setData(
-                  'application/json',
-                  JSON.stringify({
-                    id: index,
-                    offsetX: e.clientX - image.x,
-                    offsetY: e.clientY - image.y,
-                  })
-                )
-              }
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                const data = e.dataTransfer.getData('application/json');
-                if (data) {
-                  const { id, offsetX, offsetY } = JSON.parse(data);
-                  const newX = e.clientX - offsetX;
-                  const newY = e.clientY - offsetY;
-                  updateImagePosition(parseInt(id), newX, newY);
-                }
-              }}
-            />
-          ))}
+      {currentSlide.textFields.map((field) => (
+        <div
+          key={field.id}
+          className={styles.text_field}
+          style={{
+            position: 'absolute',
+            left: `${field.x}px`,
+            top: `${field.y}px`,
+          }}
+          draggable
+          onDragStart={(e) => handleDragStartText(e, field)}
+        >
+          <textarea
+            value={field.value}
+            onChange={(e) => updateTextField(field.id, e.target.value)}
+            placeholder="Type here..."
+            className={styles.textarea}
+          />
         </div>
-
-
-      </div>
+      ))}
+      {currentSlide.images.map((image, index) => (
+        <img
+          key={index}
+          src={image.src}
+          alt={`Slide Image ${index + 1}`}
+          className={styles.slide_image}
+          style={{
+            position: 'absolute',
+            left: `${image.x}px`,
+            top: `${image.y}px`,
+          }}
+          draggable
+          onDragStart={(e) =>
+            handleDragStartImage(e, index, image.x, image.y)
+          }
+        />
+      ))}
     </div>
   );
 };
