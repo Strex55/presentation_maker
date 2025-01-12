@@ -18,12 +18,21 @@
   list-style: none;
 }
 
-.slide_item:hover {
-  background-color: #e0e0e0;
-}
-
-.active { 
+.active {
   background: #ccc;
   color: white;
   border-color: black;
+}
+
+.slide_item.active {
+  background-color: #e6f7ff;
+  border-color: #1890ff;
+}
+
+.slide_item:active {
+  opacity: 0.8;
+}
+
+.slide_item:hover {
+  background-color: #e0e0e0;
 }

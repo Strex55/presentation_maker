@@ -63,35 +63,18 @@ const App: React.FC = () => {
     }
   };
 
-  const updateTextField = (fieldId: string, value: string) => {
-    if (currentSlideId) {
-      setSlides((prevSlides) =>
-        prevSlides.map((slide) =>
-          slide.id === currentSlideId
-            ? {
-                ...slide,
-                textFields: slide.textFields.map((field) =>
-                  field.id === fieldId ? { ...field, value } : field
-                ),
-              }
-            : slide
-        )
-      );
-    }
-  };
-
   const addTextField = () => {
     if (currentSlideId) {
       setSlides((prevSlides) =>
         prevSlides.map((slide) =>
           slide.id === currentSlideId
             ? {
-                ...slide,
-                textFields: [
-                  ...slide.textFields,
-                  { id: `${Date.now()}`, value: '', x: 50, y: 50 },
-                ],
-              }
+              ...slide,
+              textFields: [
+                ...slide.textFields,
+                { id: `${Date.now()}`, value: '', x: 50, y: 50 },
+              ],
+            }
             : slide
         )
       );
@@ -108,6 +91,44 @@ const App: React.FC = () => {
         )
       );
     }
+  };
+
+  const updateTextField = (fieldId: string, value: string) => {
+    if (currentSlideId) {
+      setSlides((prevSlides) =>
+        prevSlides.map((slide) =>
+          slide.id === currentSlideId
+            ? {
+              ...slide,
+              textFields: slide.textFields.map((field) =>
+                field.id === fieldId ? { ...field, value } : field
+              ),
+            }
+            : slide
+        )
+      );
+    }
+  };
+
+  const updateTextFieldPosition = (fieldId: string, x: number, y: number) => {
+    if (currentSlideId) {
+      setSlides((prevSlides) =>
+        prevSlides.map((slide) =>
+          slide.id === currentSlideId
+            ? {
+              ...slide,
+              textFields: slide.textFields.map((field) =>
+                field.id === fieldId ? { ...field, x, y } : field
+              ),
+            }
+            : slide
+        )
+      );
+    }
+  };
+
+  const reorderSlides = (updatedSlides: Slide[]) => {
+    setSlides(updatedSlides);
   };
 
   return (
@@ -127,11 +148,13 @@ const App: React.FC = () => {
           slides={slides}
           currentSlideId={currentSlideId}
           setCurrentSlideId={setCurrentSlideId}
+          reorderSlides={reorderSlides}
         />
         <WorkingTable
           currentSlideId={currentSlideId}
           slides={slides}
           updateTextField={updateTextField}
+          updateTextFieldPosition={updateTextFieldPosition}
         />
       </div>
     </div>

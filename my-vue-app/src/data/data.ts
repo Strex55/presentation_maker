@@ -1,19 +1,18 @@
 //типы
 
-export type Presentation = {
-    id: string;
-    title: string;
-    slides: Slide[];
-    currentSlideId: string | null;
-};
-
-type Slide = {
+export type DetailedSlide = {
     id: string;
     elements: SlideElement[];
     background: Background;
 };
 
-type SlideArr = Slide[];
+export type Presentation = {
+    id: string;
+    title: string;
+    slides: DetailedSlide[];
+    currentSlideId: string | null;
+};
+
 type SlideElement = TextElement | ImageElement;
 
 type TextElement = {
@@ -48,26 +47,42 @@ type Background =
     | { type: 'image'; src: string }
     | { type: 'gradient'; colors: string[] };
 
+
+
+type Slide = {
+    id: string;
+    elements: SlideElement[];
+    background: Background;
+};
+
+// type BasicSlide = {
+//     id: string;
+//     title: string;
+// };
+
+// type SlideArr = Slide[];
+
 //функции
 
-export function changePresentationTitle(presentation: Presentation, newTitle: string): Presentation {
-    return { ...presentation, title: newTitle };
-}
-
-function addSlide(presentation: Presentation, newSlide: Slide): Presentation {
+export function addSlide(presentation: Presentation, newSlide: DetailedSlide): Presentation {
     return { ...presentation, slides: [...presentation.slides, newSlide] };
 }
-function removeSlide(presentation: Presentation, slideId: string): Presentation {
+
+export function removeSlide(presentation: Presentation, slideId: string): Presentation {
     const updatedSlides = presentation.slides.filter(slide => slide.id !== slideId);
     return { ...presentation, slides: updatedSlides };
 }
 
-function moveSlide(presentation: Presentation, fromIndex: number, toIndex: number): Presentation {
+export function moveSlide(presentation: Presentation, fromIndex: number, toIndex: number): Presentation {
     const slides = [...presentation.slides];
     const [movedSlide] = slides.splice(fromIndex, 1);
     slides.splice(toIndex, 0, movedSlide);
     return { ...presentation, slides };
 }
+export function changePresentationTitle(presentation: Presentation, newTitle: string): Presentation {
+    return { ...presentation, title: newTitle };
+}
+
 
 function addElement(slide: Slide, newElement: SlideElement): Slide {
     return { ...slide, elements: [...slide.elements, newElement] };
