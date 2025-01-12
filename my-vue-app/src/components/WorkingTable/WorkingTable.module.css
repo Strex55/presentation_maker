@@ -55,6 +55,7 @@
   max-width: 100%;
   max-height: calc(100% - 120px);
   overflow-y: auto;
+  cursor: grab;
 }
 
 .slide_image {
@@ -65,3 +66,4 @@
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+

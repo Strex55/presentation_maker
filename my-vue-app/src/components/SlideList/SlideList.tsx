@@ -1,13 +1,6 @@
 import React from 'react';
 import styles from './SlideList.module.css';
-
-type Slide = {
-  id: string;
-  title: string;
-  background: string;
-  textFields: { id: string; value: string; x: number; y: number }[];
-  images: string[];
-};
+import { Slide } from '../../data/data';
 
 type SlideListProps = {
   slides: Slide[];
@@ -15,6 +8,7 @@ type SlideListProps = {
   setCurrentSlideId: (id: string) => void;
   reorderSlides: (updatedSlides: Slide[]) => void;
 };
+
 
 const SlideList: React.FC<SlideListProps> = ({ slides, currentSlideId, setCurrentSlideId, reorderSlides }) => {
   const handleDragStart = (event: React.DragEvent<HTMLLIElement>, slideId: string) => {

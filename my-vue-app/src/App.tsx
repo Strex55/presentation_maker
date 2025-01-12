@@ -3,14 +3,7 @@ import Header from './components/Header/Header';
 import SlideList from './components/SlideList/SlideList';
 import WorkingTable from './components/WorkingTable/WorkingTable';
 import styles from './App.module.css';
-
-type Slide = {
-  id: string;
-  title: string;
-  background: string;
-  textFields: { id: string; value: string; x: number; y: number }[];
-  images: string[];
-};
+import { Slide } from './data/data'
 
 const App: React.FC = () => {
   const [presentationName, setPresentationName] = useState<string>('My Presentation');
@@ -23,6 +16,8 @@ const App: React.FC = () => {
       images: [],
     },
   ]);
+
+
   const [currentSlideId, setCurrentSlideId] = useState<string | null>(slides[0]?.id || null);
 
   useEffect(() => {
@@ -86,12 +81,16 @@ const App: React.FC = () => {
       setSlides((prevSlides) =>
         prevSlides.map((slide) =>
           slide.id === currentSlideId
-            ? { ...slide, images: [...slide.images, imageUrl] }
+            ? {
+              ...slide,
+              images: [...slide.images, { src: imageUrl, x: 50, y: 50 }],
+            }
             : slide
         )
       );
     }
   };
+
 
   const updateTextField = (fieldId: string, value: string) => {
     if (currentSlideId) {
@@ -127,6 +126,25 @@ const App: React.FC = () => {
     }
   };
 
+  const updateImagePosition = (imageIndex: number, x: number, y: number) => {
+    if (currentSlideId) {
+      setSlides((prevSlides) =>
+        prevSlides.map((slide) =>
+          slide.id === currentSlideId
+            ? {
+              ...slide,
+              images: slide.images.map((image, index) =>
+                index === imageIndex ? { ...image, x, y } : image
+              ),
+            }
+            : slide
+        )
+      );
+    }
+  };
+
+
+
   const reorderSlides = (updatedSlides: Slide[]) => {
     setSlides(updatedSlides);
   };
@@ -155,6 +173,7 @@ const App: React.FC = () => {
           slides={slides}
           updateTextField={updateTextField}
           updateTextFieldPosition={updateTextFieldPosition}
+          updateImagePosition={updateImagePosition} // Передаем метод
         />
       </div>
     </div>

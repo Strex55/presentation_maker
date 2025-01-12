@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './WorkingTable.module.css';
+import { Slide } from '../../data/data';
 
 type TextField = {
   id: string;
@@ -8,25 +9,21 @@ type TextField = {
   y: number;
 };
 
-type Slide = {
-  id: string;
-  background: string;
-  textFields: TextField[];
-  images: string[];
-};
-
 type WorkingTableProps = {
   currentSlideId: string | null;
   slides: Slide[];
   updateTextField: (fieldId: string, value: string) => void;
   updateTextFieldPosition: (fieldId: string, x: number, y: number) => void;
+  updateImagePosition: (imageIndex: number, x: number, y: number) => void;
 };
+
 
 const WorkingTable: React.FC<WorkingTableProps> = ({
   currentSlideId,
   slides,
   updateTextField,
   updateTextFieldPosition,
+  updateImagePosition,
 }) => {
   const currentSlide = slides.find((slide) => slide.id === currentSlideId);
 
@@ -37,6 +34,19 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
       </div>
     );
   }
+
+  const handleDragStartText = (e: React.DragEvent<HTMLDivElement>, field: TextField) => {
+    e.dataTransfer.setData(
+      'text/plain',
+      JSON.stringify({
+        id: field.id,
+        type: 'text',
+        offsetX: e.clientX - field.x,
+        offsetY: e.clientY - field.y,
+      })
+    );
+  };
+
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, field: TextField) => {
     e.dataTransfer.setData(
@@ -60,14 +70,19 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
     const { id, offsetX, offsetY } = JSON.parse(data);
     const x = e.clientX - offsetX;
     const y = e.clientY - offsetY;
-
-    updateTextFieldPosition(id, x, y);
+    updateImagePosition(parseInt(id), x, y);
   };
-
   return (
     <div
       className={styles.working_table}
-      style={{ backgroundColor: currentSlide.background }}
+      style={{
+        backgroundColor:
+          typeof currentSlide.background === 'string'
+            ? currentSlide.background // Если строка, используем как есть
+            : currentSlide.background.type === 'color'
+              ? currentSlide.background.color // Извлекаем цвет из объекта
+              : 'transparent', // Для других типов устанавливаем прозрачный фон
+      }}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
@@ -96,12 +111,40 @@ const WorkingTable: React.FC<WorkingTableProps> = ({
           {currentSlide.images.map((image, index) => (
             <img
               key={index}
-              src={image}
+              src={image.src} // Теперь это объект с `src`
               alt={`Slide Image ${index + 1}`}
               className={styles.slide_image}
+              style={{
+                position: 'absolute',
+                left: `${image.x}px`,
+                top: `${image.y}px`,
+              }}
+              draggable
+              onDragStart={(e) =>
+                e.dataTransfer.setData(
+                  'application/json',
+                  JSON.stringify({
+                    id: index,
+                    offsetX: e.clientX - image.x,
+                    offsetY: e.clientY - image.y,
+                  })
+                )
+              }
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                const data = e.dataTransfer.getData('application/json');
+                if (data) {
+                  const { id, offsetX, offsetY } = JSON.parse(data);
+                  const newX = e.clientX - offsetX;
+                  const newY = e.clientY - offsetY;
+                  updateImagePosition(parseInt(id), newX, newY);
+                }
+              }}
             />
           ))}
         </div>
+
+
       </div>
     </div>
   );
